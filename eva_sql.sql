@@ -87,13 +87,28 @@ ORDER BY
     Total DESC
 
 
+--Les besoins de mise à jour
+--Q22. La version 2020 du produit barb004 s'appelle désormais Camper et, bonne nouvelle, son prix subit une baisse de 10%.
 
-
-
+UPDATE  products SET  pro_price =pro_price - pro_price/100 * 10, pro_name='Camper'  where pro_ref='barb004'
 
 --Q23. L'inflation en France en 2019 a été de 1,1%, appliquer cette augmentation à la gamme de parasols. => les produits 25 à 27 sont concernés.
 -- Prix d'origine du produit 25 : 100 €, prix après augmentation : 101,10 €.
 -- 100x1.0110
 
+
+UPDATE products SET  pro_price =pro_price + pro_price/100 *(1.1)  where pro_cat_id = (SELECT cat_id FROM categories where cat_name = "parasols")
+
+
+--Q24. Supprimer les produits non vendus de la catégorie "Tondeuses électriques". Vous devez utilisez une sous-requête sans indiquer de valeurs de clés.
+DELETE p
+FROM products p
+INNER JOIN `categories` c ON c.cat_id = p.pro_cat_id
+WHERE NOT EXISTS(
+        SELECT od.ode_pro_id
+        FROM orders_details od
+        WHERE od.ode_pro_id = p.pro_id
+    )
+  AND c.cat_name LIKE "Tondeuses électriques";
 
 
