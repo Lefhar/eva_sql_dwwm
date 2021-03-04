@@ -53,17 +53,46 @@ SELECT COUNT(*) as `Nb clients Canada` FROM customers where `cus_countries_id` =
 SELECT ode_id, ode_unit_price, ode_discount, ode_quantity, ode_ord_id, ode_pro_id, ord_order_date, `ord_status` FROM orders JOIN orders_details on ord_id=ode_ord_id where ord_order_date like "%2020%" and (`ord_status` NOT LIKE 'Commande annulée' or `ord_status` is null) order by `ode_ord_id` asc
 
 
+--Q17. Afficher les coordonnées des fournisseurs pour lesquels des commandes ont été passées.
+--Résultat : les 4 premiers fournisseurs de la table suppliers; seul le fournisseur n°5, FOURNIRIEN, n'a pas vendu de produits.
+SELECT sup_name FROM orders_details JOIN products on ode_pro_id=pro_id JOIN suppliers ON sup_id = pro_sup_id group by pro_sup_id
+
+
+--Q18. Quel est le chiffre d'affaires de 2020 ?
+--Résultat : 1720.83 € 
+SELECT sum(total) FROM ( SELECT ( sum(ode_unit_price - ode_unit_price / 100 * ode_discount ) * ode_quantity) AS total FROM orders JOIN orders_details ON ord_id = ode_ord_id where `ord_order_date` like '%2020%' group by `ord_id` ) as total
+
+
+--Q19. Quel est le panier moyen ?
+--Résultat : 234.29 €
+SELECT avg(total) FROM ( SELECT ( sum(ode_unit_price - ode_unit_price / 100 * ode_discount ) * ode_quantity) AS total FROM orders JOIN orders_details ON ord_id = ode_ord_id  group by `ord_id` ) as total
+
+
+
+
+--Q20. Lister le total de chaque commande par total décroissant (Afficher numéro de commande, date, total et nom du client).
+--Résultat attendu : ci-dessous copie d'écran des
+SELECT
+    ord_id,
+    cus_lastname,
+    ord_order_date, CAST(SUM(
+        ode_unit_price - ode_unit_price / 100 * ode_discount
+    ) * ode_quantity AS DECIMAL(7,2)) AS Total
+FROM
+    orders
+JOIN orders_details ON ode_ord_id = ord_id
+JOIN customers ON cus_id = ord_cus_id GROUP BY
+    `ord_id`
+ORDER BY
+    Total DESC
 
 
 
 
 
 
-
-
-
-
---Q23. L'inflation en France en 2019 a été de 1,1%, appliquer cette augmentation à la gamme de parasols. => les produits 25 à 27 sont concernés. Prix d'origine du produit 25 : 100 €, prix après augmentation : 101,10 €.
+--Q23. L'inflation en France en 2019 a été de 1,1%, appliquer cette augmentation à la gamme de parasols. => les produits 25 à 27 sont concernés.
+-- Prix d'origine du produit 25 : 100 €, prix après augmentation : 101,10 €.
 -- 100x1.0110
 
 
