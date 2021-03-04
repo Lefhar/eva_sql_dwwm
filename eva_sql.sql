@@ -111,4 +111,27 @@ WHERE NOT EXISTS(
     )
   AND c.cat_name LIKE "Tondeuses électriques";
 
+  --ou
+
+  DELETE
+    
+FROM
+    products
+WHERE
+    pro_id =(
+    SELECT
+        pro_id
+    FROM
+        `categories`
+    WHERE NOT
+        EXISTS(
+        SELECT
+            ode_pro_id
+        FROM
+            orders_details
+        WHERE
+            ode_pro_id = pro_id
+    ) AND cat_name LIKE "Tondeuses électriques" AND pro_cat_id = cat_id
+)
+
 
