@@ -10,7 +10,7 @@ CREATE USER 'fode'@'%' IDENTIFIED BY 'mdp';
 CREATE ROLE marketing;
 
 --attribution des roles par base
-GRANT SELECT, UPDATE, DELETE, INSERT ON categories.gescom_afpa TO marketing
+GRANT SELECT, UPDATE, DELETE, INSERT ON gescom_afpa.categories TO marketing
 GRANT SELECT, UPDATE, DELETE, INSERT ON gescom_afpa.orders TO marketing
 GRANT SELECT, UPDATE, DELETE, INSERT ON gescom_afpa.orders_details TO marketing  
 GRANT SELECT, UPDATE, DELETE, INSERT ON gescom_afpa.products TO marketing  
